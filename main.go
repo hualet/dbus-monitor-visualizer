@@ -3,10 +3,15 @@ package main
 import (
 	"bufio"
 	"log"
+	"os"
 	"os/exec"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
+	graphObj := newGraph()
+
 	cmd := exec.Command("dbus-monitor", "--profile")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -18,8 +23,7 @@ func main() {
 
 	go func() {
 		bufReader := bufio.NewReader(stdout)
-		graphObj := newGraph()
-		for i := 0; i < 20; i++ {
+		for {
 			lineStr, _, err := bufReader.ReadLine()
 			if err == nil {
 				msg := parseLine(string(lineStr))
@@ -42,7 +46,17 @@ func main() {
 				}
 			}
 		}
-		graphObj.generateDotFile("/tmp/test.dot")
+	}()
+
+	go func() {
+		sigs := make(chan os.Signal)
+		signal.Notify(sigs, syscall.SIGINT)
+
+		for {
+			<-sigs
+
+			graphObj.generateDotFile("/tmp/test.dot")
+		}
 	}()
 
 	if err = cmd.Wait(); err != nil {
