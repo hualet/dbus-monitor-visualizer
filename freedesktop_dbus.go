@@ -42,7 +42,10 @@ func processIDFromBusAddress(addr Address) processID {
 		return 0
 	}
 
-	return processID(id)
+	result := processID(id)
+	knownAddress[addr] = result
+
+	return result
 }
 
 func processNameFromBusAddress(addr Address) string {
