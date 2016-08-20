@@ -7,6 +7,7 @@ import (
 )
 
 type MessageType string
+type Address string
 
 const (
 	TypeMethodCall   MessageType = "mc"
@@ -18,8 +19,8 @@ type Message struct {
 	Type        MessageType
 	Timestamp   float64
 	Serial      int
-	Sender      string
-	Destination string
+	Sender      Address
+	Destination Address
 	Path        string
 	Interface   string
 	Member      string
@@ -29,7 +30,7 @@ func parseLine(line string) *Message {
 	fields := strings.Fields(line)
 	if len(fields) != 8 {
 		// TODO(hualet): or maybe it's type is method return
-		log.Println("parse line error")
+		log.Println("parse line error: ", line)
 		return nil
 	}
 
@@ -49,8 +50,8 @@ func parseLine(line string) *Message {
 		Type:        MessageType(fields[0]),
 		Timestamp:   t,
 		Serial:      s,
-		Sender:      fields[3],
-		Destination: fields[4],
+		Sender:      Address(fields[3]),
+		Destination: Address(fields[4]),
 		Path:        fields[5],
 		Interface:   fields[6],
 		Member:      fields[7],

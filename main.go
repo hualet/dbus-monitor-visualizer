@@ -21,9 +21,11 @@ func main() {
 		for {
 			line, _, err := bufReader.ReadLine()
 			if err == nil {
+				log.Println(string(line))
+
 				msg := parseLine(string(line))
 				if msg != nil {
-					log.Println("%#v", processFromBusAddress(msg.Sender))
+					log.Println("%v", processIDFromBusAddress(msg.Sender))
 				}
 			}
 		}
