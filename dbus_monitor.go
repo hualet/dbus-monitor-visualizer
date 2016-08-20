@@ -6,17 +6,17 @@ import (
 	"strings"
 )
 
-type MessageType string
+// type MessageType string
 type Address string
 
-const (
-	TypeMethodCall   MessageType = "mc"
-	TypeMethodReturn MessageType = "mr"
-	TypeSignal       MessageType = "sig"
-)
+// const (
+// 	TypeMethodCall   MessageType = "mc"
+// 	TypeMethodReturn MessageType = "mr"
+// 	TypeSignal       MessageType = "sig"
+// )
 
 type Message struct {
-	Type        MessageType
+	// Type        MessageType
 	Timestamp   float64
 	Serial      int
 	Sender      Address
@@ -27,10 +27,15 @@ type Message struct {
 }
 
 func parseLine(line string) *Message {
+	log.Println("parseLine: ", line)
+
 	fields := strings.Fields(line)
+	if fields[0] != "mc" {
+		log.Println("skip message type: ", fields[0])
+	}
+
 	if len(fields) != 8 {
-		// TODO(hualet): or maybe it's type is method return
-		log.Println("parse line error: ", line)
+		log.Println("parse line error")
 		return nil
 	}
 
@@ -47,7 +52,7 @@ func parseLine(line string) *Message {
 	}
 
 	return &Message{
-		Type:        MessageType(fields[0]),
+		// Type:        MessageType(fields[0]),
 		Timestamp:   t,
 		Serial:      s,
 		Sender:      Address(fields[3]),
