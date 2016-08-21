@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"dbus/org/freedesktop/dbus"
 	"fmt"
 	"io/ioutil"
@@ -87,10 +86,12 @@ func processNameFromProcessID(pid processID) string {
 	name, err := ioutil.ReadFile(fmt.Sprintf("/proc/%d/cmdline", pid))
 	if err != nil {
 		log.Print("get process name error: ", err)
+		return ""
 	}
 
-	result := bytes.Trim(name, "\x00")
-	return string(result)
+	result := string(name)
+	result = strings.Replace(result, "\x00", " ", 100)
+	return result
 }
 
 func processNameFromBusAddress(addr Address) string {
