@@ -40,6 +40,12 @@ func (g *graph) addNode(nd node) {
 }
 
 func (g *graph) addLine(ln line) {
+	for _, l := range g.lines {
+		if l == ln {
+			return
+		}
+	}
+
 	g.addNode(ln.from)
 	g.addNode(ln.to)
 	g.lines = append(g.lines, ln)
